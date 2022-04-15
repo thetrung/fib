@@ -4,14 +4,13 @@ use std::iter::FromIterator;
 use Expression::{
     Number, Variable, 
     Sub, Add, Mul, Div, Equal, 
-    If, Function, Call, Lambda, Return
+    If, Function, Call, Return
 };
 
 #[derive(Clone)]
 enum Expression {
     Call(i32, Vec<Box<Expression>>),
-    Function(i32, Box<Expression>),
-    Lambda(Vec<Box<Expression>>, Box<Expression>),
+    Function(i32, Vec<Box<Expression>>, Box<Expression>),
     If(Box<Expression>, Box<Expression>, Box<Expression>), // if(cond, true, false)
 
     Number(i32),
@@ -58,15 +57,14 @@ fn evaluate(vmap: &HashMap<i32, i32>, fmap: &HashMap<i32, Expression>, exp: Expr
         },
         Return(ret) => evaluate(vmap, fmap, *ret),
         
-        Function(_, lambda) => evaluate(vmap, fmap, *lambda),
+        Function(_, args, body) => {
+            let closure = make_closure(vmap, fmap, args);
+            return evaluate(&closure, fmap, *body);
+        },
 
         If(cond, _true, _false) => {
             if evaluate(vmap, fmap, *cond) == 1 
             {evaluate(vmap, fmap, *_true)} else {evaluate(vmap, fmap, *_false)}
-        },
-        Lambda(args, body) => {
-            let closure = make_closure(vmap, fmap, args);
-            return evaluate(&closure, fmap, *body);
         },
         Call(id, args) => {
             let f = &*fmap.get(&id).expect(&format!("function not found: {}", id));
@@ -79,50 +77,48 @@ fn evaluate(vmap: &HashMap<i32, i32>, fmap: &HashMap<i32, Expression>, exp: Expr
 fn main() {
     let f = 
         Function(0x1, 
-            Box::new(Lambda(
-                vec![Box::new(Variable(0x1))],
-                Box::new(If(
+            vec![Box::new(Variable(0x1))],
+            Box::new(If(
 
-                    Box::new(Equal(
-                        Box::new(Variable(0x1)), 
-                        Box::new(Number(0)))),
+                Box::new(Equal(
+                    Box::new(Variable(0x1)), 
+                    Box::new(Number(0)))),
 
-                        Box::new(Return(Box::new(Number(0)))),
+                    Box::new(Return(Box::new(Number(0)))),
 
-                        Box::new(If(
-                            Box::new(Equal(
-                                Box::new(Variable(0x1)),
-                                Box::new(Number(1)))),
-                                
-                            Box::new(Return(Box::new(Number(1)))),
+                    Box::new(If(
+                        Box::new(Equal(
+                            Box::new(Variable(0x1)),
+                            Box::new(Number(1)))),
+                            
+                        Box::new(Return(Box::new(Number(1)))),
 
-                            Box::new(Return(
-                                    Box::new(Add(
+                        Box::new(Return(
+                                Box::new(Add(
 
-                                    Box::new(Call(0x1,
-                                    vec![
-                                        Box::new(Sub(
-                                            Box::new(Variable(0x1)), 
-                                            Box::new(Number(1))))
-                                        ])
-                                    ),
+                                Box::new(Call(0x1,
+                                vec![
+                                    Box::new(Sub(
+                                        Box::new(Variable(0x1)), 
+                                        Box::new(Number(1))))
+                                    ])
+                                ),
 
-                                    Box::new(Call(0x1,
-                                    vec![
-                                        Box::new(Sub(
-                                            Box::new(Variable(0x1)), 
-                                            Box::new(Number(2))))
-                                        ])
-                                    )
-                                ))
-                            ))       
-                        ))  
-                    ))
+                                Box::new(Call(0x1,
+                                vec![
+                                    Box::new(Sub(
+                                        Box::new(Variable(0x1)), 
+                                        Box::new(Number(2))))
+                                    ])
+                                )
+                            ))
+                        ))       
+                    ))  
                 ))
             );
     let fmap: HashMap<i32, Expression> = HashMap::from_iter(vec![(0x1, f)]);
     let vmap: HashMap<i32, i32> = HashMap::new(); // empty
     let expr = Call(0x1, vec![Box::new(Number(30))]);
-    println!("result = {}",evaluate(&vmap, &fmap, expr));
-    // evaluate(&vmap, &fmap, expr);
+    // println!("result = {}",evaluate(&vmap, &fmap, expr));
+    evaluate(&vmap, &fmap, expr);
 }
