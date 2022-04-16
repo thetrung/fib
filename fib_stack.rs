@@ -4,7 +4,7 @@ use std::iter::FromIterator;
 use Expression::{
     Number, Var, 
     Sub, Add, NotEqual, 
-    Function, Call, Return
+    Function, Call, Rec, Return
 };
 
 #[derive(Clone)]
@@ -16,16 +16,15 @@ enum Expression {
     Var(i32),
     Sub, 
     Add, 
+    Rec,
     Return
 }
-
-const LOOP_COUNT:i32 = 4000000;
+// const LOOP_COUNT:i32 = 4000000;
 
 fn eval(
     bytecode : &Vec<Expression>,
     fmap: &HashMap<i32, i32>,
     stack: &mut Vec<i32>)-> i32 {
-    println!("[eval] ========= start =========");
     
     let mut loop_count = 0;
     let blength:i32 = bytecode.len() as i32;
@@ -35,24 +34,24 @@ fn eval(
     let mut vmap: HashMap<i32,i32> = HashMap::new();
     let mut vbackup: Vec<HashMap<i32,i32>> = Vec::new();
     
+    println!("{} - block#{} [eval] ==== START ====", &loop_count, &pointer);
     loop {
         if pointer < blength && pointer != -1 {
             // if loop_count > LOOP_COUNT {return -1}
             print!("{} - block#{} stacks[{}]: ", &loop_count, &pointer, &stack.len());
-            execute(&mut vmap, fmap, 
-                &bytecode[pointer as usize],
+            execute(&mut vmap, fmap, &bytecode[pointer as usize],
                  stack, &mut rstack, &mut vbackup, &mut pointer);
             pointer += 1;
-            // counting 
             loop_count += 1;
-
-        } else if stack.len() > 0 {
+        } 
+        else if stack.len() > 0 {
             let result = stack.pop().unwrap();
             return result;
         } else { 
             return 0 
         }
     }
+
 }
 
 /// execute expression by vmap && fmap
@@ -82,7 +81,7 @@ fn execute(
             stack.push(x+y);
         },
         NotEqual(label) => {
-            let _top = stack.len()-1;
+            // let _top = stack.len()-1;
             let x = stack.pop().unwrap();
             let y = stack.pop().unwrap();
             if x != y {
@@ -91,7 +90,6 @@ fn execute(
             println!("[not_equal] {} != {} > jump #{}", &x, &y, &label);
         },
         Var(id) => {
-            // println!("[var]");
             let v = vmap.get(&id).unwrap();
             stack.push(*v);
             println!("[var] #{}={}", *id, &v);
@@ -105,13 +103,15 @@ fn execute(
                 let callback = rstack.pop().unwrap();
                 println!("[return] @{} callback > #{}", &pointer, callback);
                 *pointer = callback;
+            } else {
+                println!("[return]\n");
             }
         },
         
         Function(_, n) => {
             print!("[func(");
-            // TODO: 
-            // Need some ways to restore args if vmap exist.
+            // 
+            // Restore args if vmap exist.
             if vmap.len() > 0 {
                 vbackup.push(vmap.clone());
             }
@@ -130,17 +130,22 @@ fn execute(
             print!(")]");
             println!();
         },
+        Rec => {
+            println!("[rec]\n");
+            rstack.push(*pointer);
+            *pointer = -1;
+        },
         Call(id, args_len) => {
             println!("[call] f#{}({}) @{}\n", &id, &args_len, &pointer);
-            let f = &*fmap.get(&id)
-                    .expect(&format!("function not found: {}", id));
+            let f = &*fmap.get(&id).unwrap();
+                    // .expect(&format!("function not found: {}", id));
             if stack.len() < *args_len as usize {
                 println!("[call] not enough item on stack !");
                 return;
             }
             // save pointer, so we can return from a call.
             rstack.push(*pointer);
-            *pointer = *f-1;
+            *pointer = f-1;
         }
     }
 }
@@ -148,33 +153,36 @@ fn execute(
 fn main() {
     let bytecode = vec![
         Function(0x1, 1),   // 0
-        // 0 != arg ?
+        // n != 0 ?
         Number(0),          // 1
         Var(0),             // 2
         NotEqual(5),        // 3
         Number(0),          // 4
         Return,             // 5
-       // 1 != arg ?
+       // n != 1 ?
         Number(1),          // 6
         Var(0),             // 7
         NotEqual(10),       // 8
         Number(1),          // 9
         Return,             // 10
-       // arg - 1 
+        // f1 = (n - 1) 
         Number(1),          // 11
         Var(0),             // 12
         Sub,                // 13
-        Call(0x1, 1),       // 14
-        // arg - 2
+        Rec,                // 14
+        // f2 = (n - 2)
         Number(2),          // 15
         Var(0),             // 16
         Sub,                // 17
-        Call(0x1, 1),       // 18
+        Rec,                // 18
+        // f1 + f2
         Add,                // 19
         Return              // 20
     ];
-    let mut fmap: HashMap<i32,i32> = // function 0x1 at vec![0]
-        HashMap::from_iter(vec![(0x1, 0)]);
+    let fmap: HashMap<i32,i32> = HashMap::from_iter(vec![(0x1, 0)]);
     let mut stack:Vec<i32> = vec![30]; // result = 2
-    println!("result = {}",eval(&bytecode, &mut fmap, &mut stack));
+
+    let result = 
+    eval(&bytecode, &fmap, &mut stack);
+    println!("result = {}", &result);
 }
