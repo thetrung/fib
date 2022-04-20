@@ -9,36 +9,36 @@ use Expression::{
 
 #[derive(Clone)]
 enum Expression {
-    Function(i32, i32),
-    Call(i32, i32),
-    JNE(i32),
-    Number(i32),
-    Var(i32),
+    Function(i128, i128),
+    Call(i128, i128),
+    JNE(i128),
+    Number(i128),
+    Var(i128),
     Sub, 
     Add, 
     Rec,
     Return
 }
-// const LOOP_COUNT:i32 = 4000000;
+// const LOOP_COUNT:i128 = 4000000;
 
 fn eval(
     bytecode : &Vec<Expression>,
-    stack: &mut Vec<i32>)-> i32 {
+    stack: &mut Vec<i128>)-> i128 {
     
     // let mut loop_count = 0;
-    let blength:i32 = bytecode.len() as i32;
+    let blength:i128 = bytecode.len() as i128;
     
-    let mut pointer:i32 = 0;
-    let mut rstack: Vec<i32> = Vec::new();
-    let mut vmap: HashMap<i32,i32> = HashMap::new();
-    let mut fmap: HashMap<i32, i32> = HashMap::new();
-    let mut vbackup: Vec<HashMap<i32,i32>> = Vec::new();
+    let mut pointer:i128 = 0;
+    let mut rstack: Vec<i128> = Vec::new();
+    let mut vmap: HashMap<i128,i128> = HashMap::new();
+    let mut fmap: HashMap<i128, i128> = HashMap::new();
+    let mut vbackup: Vec<HashMap<i128,i128>> = Vec::new();
     
     // println!("{} - block#{} [eval] ==== START ====", &loop_count, &pointer);
     loop {
         if pointer < blength && pointer != -1 {
             // if loop_count > LOOP_COUNT {return -1}
-            // print!("{} - block#{} stacks[{}]: ", &loop_count, &pointer, &stack.len());
+            // println!("{} - block#{} stacks[{}]: ", &loop_count, &pointer, &stack.len());
             execute(
                 &mut vmap, &mut fmap, &bytecode[pointer as usize],
                  stack, &mut rstack, &mut vbackup, &mut pointer);
@@ -49,7 +49,7 @@ fn eval(
             let result = stack.pop().unwrap();
             return result;
         } else { 
-            return 0 
+            return 0
         }
     }
 
@@ -57,13 +57,13 @@ fn eval(
 
 /// execute expression by vmap && fmap
 fn execute(
-    vmap: &mut HashMap<i32, i32>,
-    fmap: &mut HashMap<i32, i32>,
+    vmap: &mut HashMap<i128, i128>,
+    fmap: &mut HashMap<i128, i128>,
     exp: &Expression, 
-    stack: &mut Vec<i32>,
-    rstack: &mut Vec<i32>,
-    vbackup: &mut Vec<HashMap<i32, i32>>,
-    pointer: &mut i32) {
+    stack: &mut Vec<i128>,
+    rstack: &mut Vec<i128>,
+    vbackup: &mut Vec<HashMap<i128, i128>>,
+    pointer: &mut i128) {
     match exp {
         Number(num) => {
             // println!("[number] {}", &num);
@@ -169,8 +169,8 @@ fn main() {
      * end
      * 
      * -- As our own thing 
-     * -- with number as i32 default
-     * func fib(3)
+     * -- with number as i128 default
+     * func fib(n: i128, a: i128, b: i128)
      * push 0, n
      * jne if_eq_1
      * push a
@@ -218,8 +218,8 @@ fn main() {
         Rec,                // 
         // Return              // 
     ];
-    // let mut fmap: HashMap<i32,i32> = HashMap::from_iter(vec![(0x1, 0)]);
-    let mut new_stack:Vec<i32> = vec![1, 0, 30]; // b a n f => f( n a b)
+    // let mut fmap: HashMap<i128,i128> = HashMap::from_iter(vec![(0x1, 0)]);
+    let mut new_stack:Vec<i128> = vec![1, 0, 100]; // b a n f => f( n a b)
 
     // let result = 
     eval(&bytecode, &mut new_stack);

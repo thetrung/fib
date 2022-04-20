@@ -9,30 +9,30 @@ use Expression::{
 
 #[derive(Clone)]
 enum Expression {
-    Function(i32, i32),
-    Call(i32, i32),
-    NotEqual(i32),
-    Number(i32),
-    Var(i32),
+    Function(i128, i128),
+    Call(i128, i128),
+    NotEqual(i128),
+    Number(i128),
+    Var(i128),
     Sub, 
     Add, 
     Rec,
     Return
 }
-// const LOOP_COUNT:i32 = 4000000;
+// const LOOP_COUNT:i128 = 4000000;
 
 fn eval(
     bytecode : &Vec<Expression>,
-    fmap: &HashMap<i32, i32>,
-    stack: &mut Vec<i32>)-> i32 {
+    fmap: &HashMap<i128, i128>,
+    stack: &mut Vec<i128>)-> i128 {
     
     // let mut loop_count = 0;
-    let blength:i32 = bytecode.len() as i32;
+    let blength:i128 = bytecode.len() as i128;
     
-    let mut pointer:i32 = 0;
-    let mut rstack: Vec<i32> = Vec::new();
-    let mut vmap: HashMap<i32,i32> = HashMap::new();
-    let mut vbackup: Vec<HashMap<i32,i32>> = Vec::new();
+    let mut pointer:i128 = 0;
+    let mut rstack: Vec<i128> = Vec::new();
+    let mut vmap: HashMap<i128,i128> = HashMap::new();
+    let mut vbackup: Vec<HashMap<i128,i128>> = Vec::new();
     
     // println!("{} - block#{} [eval] ==== START ====", &loop_count, &pointer);
     loop {
@@ -56,13 +56,13 @@ fn eval(
 
 /// execute expression by vmap && fmap
 fn execute(
-    vmap: &mut HashMap<i32, i32>,
-    fmap: &HashMap<i32, i32>,
+    vmap: &mut HashMap<i128, i128>,
+    fmap: &HashMap<i128, i128>,
     exp: &Expression, 
-    stack: &mut Vec<i32>,
-    rstack: &mut Vec<i32>,
-    vbackup: &mut Vec<HashMap<i32, i32>>,
-    pointer: &mut i32) {
+    stack: &mut Vec<i128>,
+    rstack: &mut Vec<i128>,
+    vbackup: &mut Vec<HashMap<i128, i128>>,
+    pointer: &mut i128) {
     match exp {
         Number(num) => {
             println!("[number] {}", &num);
@@ -179,8 +179,8 @@ fn main() {
         Add,                // 19
         Return              // 20
     ];
-    let fmap: HashMap<i32,i32> = HashMap::from_iter(vec![(0x1, 0)]);
-    let mut stack:Vec<i32> = vec![30]; // result = 2
+    let fmap: HashMap<i128,i128> = HashMap::from_iter(vec![(0x1, 0)]);
+    let mut stack:Vec<i128> = vec![100]; // result = 2
 
     let result = 
     eval(&bytecode, &fmap, &mut stack);

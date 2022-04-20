@@ -1,4 +1,4 @@
-fn fib(n: u32, a: u32, b: u32) -> u32 {
+fn fib(n: i128, a: i128, b: i128) -> i128 {
     if n == 0  { a }
     else if n == 1 { b }
     else { 
@@ -7,6 +7,6 @@ fn fib(n: u32, a: u32, b: u32) -> u32 {
 }
 
 fn main () {
-   let r =  fib(30, 0, 1);
+   let r =  fib(100, 0, 1);
     // println!("acc = {}", r);
 }

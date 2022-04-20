@@ -9,27 +9,27 @@ use Expression::{
 
 #[derive(Clone)]
 enum Expression {
-    Call(i32, Vec<Box<Expression>>),
-    Function(i32, Vec<Box<Expression>>, Box<Expression>),
+    Call(i128, Vec<Box<Expression>>),
+    Function(i128, Vec<Box<Expression>>, Box<Expression>),
     If(Box<Expression>, Box<Expression>, Box<Expression>), // if(cond, true, false)
 
-    Number(i32),
+    Number(i128),
     Return(Box<Expression>),
     Equal(Box<Expression>, Box<Expression>),
     Add(Box<Expression>, Box<Expression>),
     Sub(Box<Expression>, Box<Expression>),
     // Mul(Box<Expression>, Box<Expression>),
     // Div(Box<Expression>, Box<Expression>),
-    Variable(i32)
+    Variable(i128)
 }
 
 fn make_closure(
-    vmap: &HashMap<i32, i32>, 
-    fmap: &HashMap<i32, Expression>, 
-    args: Vec<Box<Expression>>) -> HashMap<i32, i32> {
+    vmap: &HashMap<i128, i128>, 
+    fmap: &HashMap<i128, Expression>, 
+    args: Vec<Box<Expression>>) -> HashMap<i128, i128> {
     // argument index start from 1 
     let mut index = 1;
-    let mut closure: HashMap<i32,i32> = HashMap::new();
+    let mut closure: HashMap<i128,i128> = HashMap::new();
     for arg in args {
         let v = evaluate(vmap, fmap, *arg);
         closure.insert(index, v);
@@ -40,7 +40,7 @@ fn make_closure(
 }
 
 /// Evaluate expression by vmap && fmap
-fn evaluate(vmap: &HashMap<i32, i32>, fmap: &HashMap<i32, Expression>, exp: Expression) -> i32 {
+fn evaluate(vmap: &HashMap<i128, i128>, fmap: &HashMap<i128, Expression>, exp: Expression) -> i128 {
     match exp {
         Number(num) => num, 
         Sub(x, y) => evaluate(vmap, fmap, *x) - evaluate(vmap, fmap, *y),
@@ -116,9 +116,9 @@ fn main() {
                     ))  
                 ))
             );
-    let fmap: HashMap<i32, Expression> = HashMap::from_iter(vec![(0x1, f)]);
-    let vmap: HashMap<i32, i32> = HashMap::new(); // empty
-    let expr = Call(0x1, vec![Box::new(Number(30))]);
+    let fmap: HashMap<i128, Expression> = HashMap::from_iter(vec![(0x1, f)]);
+    let vmap: HashMap<i128, i128> = HashMap::new(); // empty
+    let expr = Call(0x1, vec![Box::new(Number(100))]);
     // println!("result = {}",evaluate(&vmap, &fmap, expr));
     evaluate(&vmap, &fmap, expr);
 }

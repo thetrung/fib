@@ -1,8 +1,8 @@
 fn main () {
-    fib(30);
+    fib(100);
 }
 
-fn fib(n: u32) -> u32 {
+fn fib(n: i128) -> i128 {
     match n {
         0 => return 0,
         1 => return 1,
