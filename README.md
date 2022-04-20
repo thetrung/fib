@@ -2,22 +2,49 @@
 Various approach on core VM implementation with speed test on Fibonacci function.
 
 ### Performance result
+I will compare `lua`, `luaJIT`, `luavm` with my core interpreter `rust_stack`, `rust_tree` and the native `rust_native` and later, same thing, same evaluation algoritm with a `tail call optimization` version for all of them (six in total). As `lua`, `luaJIT`, `luavm` share the same `fib.lua`, my 3 impls will have their custom rival with `_tail` postfix.
 
-    Running luavm on ./benchmarks/fib.lua
-    Mean: 1.809, Std.Dev: 0.043, Margin of error: 0.049536955546339335
+- With recursion call :
 
-    Running luajit on ./benchmarks/fib.lua
-    Mean: 0.011, Std.Dev: 0.001, Margin of error: 0.0011520222220078916
+        luajit 
+        0.011  
 
-    Running lua on ./benchmarks/fib.lua
-    Mean: 0.073, Std.Dev: 0.005, Margin of error: 0.0057601111100394585
+        rust_native 
+        0.012
+        
+        lua 
+        0.078
 
-    Running rust_native on ./benchmarks/fib.lua
-    Mean: 0.011, Std.Dev: 0.001, Margin of error: 0.0011520222220078916
+        luavm 
+        1.925
 
-    Running rust_stack_tail on ./benchmarks/fib.lua
-    Mean: 0.003, Std.Dev: 0.001, Margin of error: 0.0011520222220078916
-    
+        rust_stack 
+        7.232 
 
-With `tail call optimization`, `rust_stack` as `rust_stack_tail` could really be faster than `luajit` and `rust_native` by 3.66 times ! While also faster than `luavm` implemented in `rust` for 603 times.
+        rust_tree 
+        35.151
 
+- With `tail call optimization`: 
+
+        luajit 
+        0.003
+
+        rust_stack_tail 
+        0.003
+
+        rust_native_tail 
+        0.003
+
+        lua 
+        0.004
+
+        rust_tree_tail 
+        0.004
+
+        luavm 
+        0.006
+        
+- Which mean, my `rust_stack_tail` could be as fast as `luajit` or `rust_native_tail` !
+
+### Conclusion 
+When there's no (or less) difference in algorithm/compiler optimization, the direct call from a series of instructions could be just as fast as native code or JITed, bytecode execution.
