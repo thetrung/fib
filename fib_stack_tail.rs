@@ -23,7 +23,6 @@ enum Expression {
 
 fn eval(
     bytecode : &Vec<Expression>,
-    fmap: &HashMap<i32, i32>,
     stack: &mut Vec<i32>)-> i32 {
     
     // let mut loop_count = 0;
@@ -32,6 +31,7 @@ fn eval(
     let mut pointer:i32 = 0;
     let mut rstack: Vec<i32> = Vec::new();
     let mut vmap: HashMap<i32,i32> = HashMap::new();
+    let mut fmap: HashMap<i32, i32> = HashMap::new();
     let mut vbackup: Vec<HashMap<i32,i32>> = Vec::new();
     
     // println!("{} - block#{} [eval] ==== START ====", &loop_count, &pointer);
@@ -39,7 +39,8 @@ fn eval(
         if pointer < blength && pointer != -1 {
             // if loop_count > LOOP_COUNT {return -1}
             // print!("{} - block#{} stacks[{}]: ", &loop_count, &pointer, &stack.len());
-            execute(&mut vmap, fmap, &bytecode[pointer as usize],
+            execute(
+                &mut vmap, &mut fmap, &bytecode[pointer as usize],
                  stack, &mut rstack, &mut vbackup, &mut pointer);
             pointer += 1;
             // loop_count += 1;
@@ -57,7 +58,7 @@ fn eval(
 /// execute expression by vmap && fmap
 fn execute(
     vmap: &mut HashMap<i32, i32>,
-    fmap: &HashMap<i32, i32>,
+    fmap: &mut HashMap<i32, i32>,
     exp: &Expression, 
     stack: &mut Vec<i32>,
     rstack: &mut Vec<i32>,
@@ -107,9 +108,16 @@ fn execute(
             }
         },
         
-        Function(_, n) => {
-            // print!("[func(");
+        Function(fid, n) => {
+            // print!("[func]");
             // 
+            // Cache into fmap if new: 
+            if !fmap.contains_key(&*fid) {
+                let ptr = pointer.clone();
+                fmap.insert(*fid, ptr);
+                // print!(" new#{:#02x}@ptr={} ", &*fid, &ptr);
+            }
+            // print!("(");
             // Restore args if vmap exist.
             if vmap.len() > 0 {
                 vbackup.push(vmap.clone());
@@ -126,10 +134,11 @@ fn execute(
                     break;
                 }
             }
-            // print!(")]");
+            // print!(")");
             // println!();
         },
-        Rec => {
+        /// [rec]: will be faster than call for ignoring function lookup.
+        Rec => { 
             // println!("[rec]\n");
             rstack.push(*pointer);
             *pointer = -1;
@@ -150,6 +159,36 @@ fn execute(
 }
 
 fn main() {
+    /* Sample source code TBI : 
+     * -- as 'Lua' 
+     * function fib (n, a, b)
+     *      if (n == 0) return a
+     *      elseif (n == 1) return b
+     *      else return fib(n-1, b, a + b)
+     *      end
+     * end
+     * 
+     * -- As our own thing 
+     * -- with number as i32 default
+     * func fib(3)
+     * push 0, n
+     * jne if_eq_1
+     * push a
+     * ret
+     * 
+     * if_eq_1: 
+     * push 1, n
+     * jne tail_call
+     * push b
+     * ret
+     * 
+     * tail_call:
+     * add a, b
+     * push b
+     * sub n, 1
+     * rec
+     * 
+     */
     let bytecode = vec![
         // fib (n, a, b)
         Function(0x1, 3),   // 0
@@ -177,12 +216,12 @@ fn main() {
         Sub,                // 
         // f(f3. f2. f1)
         Rec,                // 
-        Return              // 
+        // Return              // 
     ];
-    let fmap: HashMap<i32,i32> = HashMap::from_iter(vec![(0x1, 0)]);
-    let mut stack:Vec<i32> = vec![1, 0, 30]; // b a n f => f( n a b)
+    // let mut fmap: HashMap<i32,i32> = HashMap::from_iter(vec![(0x1, 0)]);
+    let mut new_stack:Vec<i32> = vec![1, 0, 30]; // b a n f => f( n a b)
 
     // let result = 
-    eval(&bytecode, &fmap, &mut stack);
+    eval(&bytecode, &mut new_stack);
     // println!("result = {}", &result);
 }
