@@ -3,7 +3,7 @@ use std::iter::FromIterator;
 
 use Expression::{
     Number, Variable, 
-    Sub, Add, Mul, Div, Equal, 
+    Sub, Add, /*Mul, Div,*/ Equal, 
     If, Function, Call, Return
 };
 
@@ -18,8 +18,8 @@ enum Expression {
     Equal(Box<Expression>, Box<Expression>),
     Add(Box<Expression>, Box<Expression>),
     Sub(Box<Expression>, Box<Expression>),
-    Mul(Box<Expression>, Box<Expression>),
-    Div(Box<Expression>, Box<Expression>),
+    // Mul(Box<Expression>, Box<Expression>),
+    // Div(Box<Expression>, Box<Expression>),
     Variable(i32)
 }
 
@@ -45,8 +45,8 @@ fn evaluate(vmap: &HashMap<i32, i32>, fmap: &HashMap<i32, Expression>, exp: Expr
         Number(num) => num, 
         Sub(x, y) => evaluate(vmap, fmap, *x) - evaluate(vmap, fmap, *y),
         Add(x, y) => evaluate(vmap, fmap, *x) + evaluate(vmap, fmap, *y),
-        Mul(x, y) => evaluate(vmap, fmap, *x) * evaluate(vmap, fmap, *y),
-        Div(x, y) => evaluate(vmap, fmap, *x) / evaluate(vmap, fmap, *y),
+        // Mul(x, y) => evaluate(vmap, fmap, *x) * evaluate(vmap, fmap, *y),
+        // Div(x, y) => evaluate(vmap, fmap, *x) / evaluate(vmap, fmap, *y),
         Equal(x, y) => {
             if evaluate(vmap, fmap, *x) == evaluate(vmap, fmap, *y) 
             { 1 } else { 0 }

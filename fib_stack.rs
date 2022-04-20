@@ -26,7 +26,7 @@ fn eval(
     fmap: &HashMap<i32, i32>,
     stack: &mut Vec<i32>)-> i32 {
     
-    let mut loop_count = 0;
+    // let mut loop_count = 0;
     let blength:i32 = bytecode.len() as i32;
     
     let mut pointer:i32 = 0;
@@ -34,15 +34,15 @@ fn eval(
     let mut vmap: HashMap<i32,i32> = HashMap::new();
     let mut vbackup: Vec<HashMap<i32,i32>> = Vec::new();
     
-    println!("{} - block#{} [eval] ==== START ====", &loop_count, &pointer);
+    // println!("{} - block#{} [eval] ==== START ====", &loop_count, &pointer);
     loop {
         if pointer < blength && pointer != -1 {
             // if loop_count > LOOP_COUNT {return -1}
-            print!("{} - block#{} stacks[{}]: ", &loop_count, &pointer, &stack.len());
+            // print!("{} - block#{} stacks[{}]: ", &loop_count, &pointer, &stack.len());
             execute(&mut vmap, fmap, &bytecode[pointer as usize],
                  stack, &mut rstack, &mut vbackup, &mut pointer);
             pointer += 1;
-            loop_count += 1;
+            // loop_count += 1;
         } 
         else if stack.len() > 0 {
             let result = stack.pop().unwrap();
