@@ -2,6 +2,7 @@
 mkdir ./build
 
 rustc fib.rs -o ./build/fib
+rustc fib_tail.rs -o ./build/fib_tail
 rustc fib_tree.rs -o ./build/fib_tree
 rustc fib_tree_tail.rs -o ./build/fib_tree_tail
 rustc fib_stack.rs -o ./build/fib_stack
