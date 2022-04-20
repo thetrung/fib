@@ -44,7 +44,30 @@ I will compare `lua`, `luaJIT`, `luavm` with my core interpreter `rust_stack`, `
         luavm 
         0.006
         
-- Which mean, my `rust_stack_tail` could be as fast as `luajit` or `rust_native_tail` !
+Which mean, my `rust_stack_tail` could be as fast as `luajit` or `rust_native_tail` !
+
+- With `i128` to calculate fib(100): 
+
+
+        luajit
+        0.002
+
+        lua
+        0.002
+
+        luavm
+        0.005
+        
+        rust_native_tail
+        0.005
+
+        rust_stack_tail
+        0.007
+
+        rust_tree_tail
+        0.008
+
+This is where those compilers did some tricky optimization again, perhaps, like converting into iterative loop instead of recursion.
 
 ### Conclusion 
 When there's no (or less) difference in algorithm/compiler optimization, the direct call from a series of instructions could be just as fast as native code or JITed, bytecode execution.

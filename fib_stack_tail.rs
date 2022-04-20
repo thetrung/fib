@@ -170,6 +170,7 @@ fn main() {
      * 
      * -- As our own thing 
      * -- with number as i128 default
+     * 
      * func fib(n: i128, a: i128, b: i128)
      * push 0, n
      * jne if_eq_1
@@ -218,7 +219,6 @@ fn main() {
         Rec,                // 
         // Return              // 
     ];
-    // let mut fmap: HashMap<i128,i128> = HashMap::from_iter(vec![(0x1, 0)]);
     let mut new_stack:Vec<i128> = vec![1, 0, 100]; // b a n f => f( n a b)
 
     // let result = 
