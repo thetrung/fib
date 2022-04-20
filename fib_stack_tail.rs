@@ -172,18 +172,17 @@ fn main() {
      * -- with number as i128 default
      * 
      * func fib(n, a, b)
+     * eq_0:
      * push 0, n
-     * jne if_eq_1
-     * push a
-     * ret
+     * jne eq_1
+     * ret a
      * 
-     * if_eq_1: 
+     * eq_1: 
      * push 1, n
-     * jne tail_call
-     * push b
-     * ret
+     * jne tail
+     * ret b
      * 
-     * tail_call:
+     * tail:
      * add a, b
      * push b
      * sub n, 1
