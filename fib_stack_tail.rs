@@ -171,7 +171,7 @@ fn main() {
      * -- As our own thing 
      * -- with number as i128 default
      * 
-     * func fib(n: i128, a: i128, b: i128)
+     * func fib(n, a, b)
      * push 0, n
      * jne if_eq_1
      * push a
