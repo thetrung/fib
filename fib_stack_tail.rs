@@ -19,13 +19,13 @@ enum Expression {
     Rec,
     Return
 }
-// const LOOP_COUNT:i128 = 4000000;
+// const MAX_INSTRUCTION:i128 = 4000000;
 
 fn eval(
     bytecode : &Vec<Expression>,
     stack: &mut Vec<i128>)-> i128 {
     
-    // let mut loop_count = 0;
+    let mut instruction_count = 0;
     let blength:i128 = bytecode.len() as i128;
     
     let mut pointer:i128 = 0;
@@ -34,18 +34,19 @@ fn eval(
     let mut fmap: HashMap<i128, i128> = HashMap::new();
     let mut vbackup: Vec<HashMap<i128,i128>> = Vec::new();
     
-    // println!("{} - block#{} [eval] ==== START ====", &loop_count, &pointer);
+    // println!("{} - block#{} [eval] ==== START ====", &instruction_count, &pointer);
     loop {
         if pointer < blength && pointer != -1 {
-            // if loop_count > LOOP_COUNT {return -1}
-            // println!("{} - block#{} stacks[{}]: ", &loop_count, &pointer, &stack.len());
+            // if instruction_count > MAX_INSTRUCTION {return -1}
+            // println!("{} - block#{} stacks[{}]: ", &instruction_count, &pointer, &stack.len());
             execute(
                 &mut vmap, &mut fmap, &bytecode[pointer as usize],
                  stack, &mut rstack, &mut vbackup, &mut pointer);
             pointer += 1;
-            // loop_count += 1;
+            instruction_count += 1;
         } 
         else if stack.len() > 0 {
+            // println!("instructions: {}",&instruction_count);
             let result = stack.pop().unwrap();
             return result;
         } else { 
