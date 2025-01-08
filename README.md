@@ -1,7 +1,14 @@
 # fib
-Various approach on core VM implementation with speed test on Fibonacci function.
+Various approach on core VM implementation with Fibonacci speed test on top-3 language implementations.
 
-### Performance result
+### Top-3 native result 
+include Zig, Rust & LLVM-IR implementation, which I use to learn more about how those languages is so fast. Guess Zig is both simpler to learn & faster to code.
+
+![benchmark](https://github.com/thetrung/fib/blob/master/Zig_Rust_LLVM.png)
+
+
+
+### VMs result
 I compare `lua`, `luaJIT`, `luavm` with my core evaluation of `rust_stack`, `rust_tree`, `1byte_format` and the native `rust_native`. Then, the same thing, with a `tail call optimization` version for all of them (six in total). 
 
 As `lua`, `luaJIT`, `luavm` share the same `fib.lua`, while my impls will have their custom rival with `_tail` postfix.
