@@ -33,7 +33,7 @@ define i128 @fib(i128 %n, i128 %a, i128 %b, i128* %count) {
 
 
 declare i32 @printf(i8*, ...)
-@format = private constant [29 x i8] c"fib: %lld %lld, Count: %d\0a\0n"
+@format = private constant [29 x i8] c"fib: %llu %llu, Count: %d\0a\0n"
 
 define i32 @main(){
     ; Init variables
