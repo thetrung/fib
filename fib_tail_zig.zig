@@ -14,6 +14,7 @@ const print = std.debug.print;
 
 pub fn main () !void {
     var loop_count:i128 = 0;
-    const r =  fib(100, 0, 1, &loop_count);
-    print("acc = {} / loop: {}", .{r, loop_count});
+    _ = fib(93, 0, 1, &loop_count);
+    // const r =  fib(93, 0, 1, &loop_count);
+    // print("acc = {} / loop: {}", .{r, loop_count});
 }

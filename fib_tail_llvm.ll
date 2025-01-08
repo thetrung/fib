@@ -32,41 +32,28 @@ define i128 @fib(i128 %n, i128 %a, i128 %b, i128* %count) {
 }
 
 
-declare i32 @printf(i8*, ...)
-@format = private constant [29 x i8] c"fib: %llu %llu, Count: %d\0a\0n"
+; declare i32 @printf(i8*, ...)
+; @format = private constant [29 x i8] c"fib: %llu %llu, Count: %d\0a\0n"
 
 define i32 @main(){
-    ; Init variables
-    %n = alloca i128
-    %a = alloca i128
-    %b = alloca i128
     %count = alloca i128
-
-    ; Assign values 
-    store i128 93, i128* %n ;; from fib(93), the number exceeded i64.
-    store i128 0, i128* %a
-    store i128 1, i128* %b
     store i128 0, i128* %count
 
     ; Call fib
-    %n_val = load i128, i128* %n
-    %a_val = load i128, i128* %a
-    %b_val = load i128, i128* %b
-    ; final result 
-    %final_result = call i128 @fib(i128 %n_val, i128 %a_val, i128 %b_val, i128* %count)
+    %final_result = call i128 @fib(i128 93, i128 0, i128 1, i128* %count)
     
     ; Convert lower 64 bits of i128 to i64
-    %final_count = load i128, i128* %count
-    %low_bits_count = trunc i128 %final_count to i32
+    ; %final_count = load i128, i128* %count
+    ; %low_bits_count = trunc i128 %final_count to i32
 
     ; Convert 128-bit result -> 2x 64-bit chunks :
-    %low_i64 = trunc i128 %final_result to i64
-    %shift_64 = lshr i128 %final_result, 64
-    %high_i64 = trunc i128 %shift_64 to i64
+    ; %low_i64 = trunc i128 %final_result to i64
+    ; %shift_64 = lshr i128 %final_result, 64
+    ; %high_i64 = trunc i128 %shift_64 to i64
 
-    ; Call Printf
-    %format_ptr = getelementptr [29 x i8], [29 x i8]* @format, i32 0, i32 0
-    call i32 (i8*, ...) @printf(i8* %format_ptr, i64 %high_i64, i64 %low_i64, i32 %low_bits_count)
+    ; ; Call Printf
+    ; %format_ptr = getelementptr [29 x i8], [29 x i8]* @format, i32 0, i32 0
+    ; call i32 (i8*, ...) @printf(i8* %format_ptr, i64 %high_i64, i64 %low_i64, i32 %low_bits_count)
 
     ret i32 0
 }
