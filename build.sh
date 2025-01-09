@@ -17,7 +17,11 @@ llc -filetype=obj fib_tail_llvm.ll -o ./build/fib_tail_llvm.o && clang -no-pie .
 zig build-exe fib_tail_zig.zig && mv fib_tail_zig ./build/fib_tail_zig && rm fib_tail_zig.o
 
 # Benchmark with hyperfine :
-cd ./build && hyperfine './fib_tail_llvm' './fib_tail_zig' './fib_tail_rust'
+if [ hyperfine ]; then 
+    cd ./build && hyperfine './fib_tail_llvm' './fib_tail_zig' './fib_tail_rust'
+    echo ''
 
-# Delete ?
-cd .. && rm ./build/* && rm -rf ./build
+    # Delete ?
+    cd .. && rm ./build/* && rm -rf ./build
+    echo 'Removed Build folder.'
+fi
