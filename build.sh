@@ -19,7 +19,7 @@ fasm fib_fasm.asm && mv fib_fasm ./build/fib_fasm && chmod +x ./build/fib_fasm
 
 # Benchmark with hyperfine :
 if [ hyperfine ]; then 
-    cd ./build && hyperfine -N --prepare './fib_tail_llvm' './fib_tail_zig' './fib_tail_rust' './fib_fasm'
+    cd ./build && hyperfine --warmup 10 -N './fib_tail_llvm' './fib_tail_zig' './fib_tail_rust' './fib_fasm'
     echo ''
 
     # Delete ?
