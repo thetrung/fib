@@ -9,6 +9,6 @@ fn fib(n: i128, a: i128, b: i128, loop_count: &mut i128) -> i128 {
 
 fn main () {
     let mut loop_count = 0;
-   let r =  fib(93, 0, 1, &mut loop_count);
-    println!("acc = {} / loop: {}", r, loop_count);
+   let _ =  fib(93, 0, 1, &mut loop_count);
+    // println!("acc = {} / loop: {}", r, loop_count);
 }
