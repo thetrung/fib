@@ -33,7 +33,7 @@ define i128 @fib(i128 %n, i128 %a, i128 %b, i128* %count) {
 
 
 declare i32 @printf(i8*, ...)
-@format = private constant [29 x i8] c"fib: %llu %llu, Count: %d\0a\0n"
+@format = private constant [26 x i8] c"fib: %llu %llu, Count: %d\0a"
 
 define i32 @main(){
     %count = alloca i128
@@ -43,17 +43,17 @@ define i32 @main(){
     %final_result = call i128 @fib(i128 100, i128 0, i128 1, i128* %count)
     
     ; Convert lower 64 bits of i128 to i64
-    %final_count = load i128, i128* %count
-    %low_bits_count = trunc i128 %final_count to i32
+    ;%final_count = load i128, i128* %count
+    ;%low_bits_count = trunc i128 %final_count to i32
 
     ; Convert 128-bit result -> 2x 64-bit chunks :
-    %low_i64 = trunc i128 %final_result to i64
-    %shift_64 = lshr i128 %final_result, 64
-    %high_i64 = trunc i128 %shift_64 to i64
+    ;%low_i64 = trunc i128 %final_result to i64
+   ; %shift_64 = lshr i128 %final_result, 64
+  ;  %high_i64 = trunc i128 %shift_64 to i64
 
     ; Call Printf
-    %format_ptr = getelementptr [29 x i8], [29 x i8]* @format, i32 0, i32 0
-    call i32 (i8*, ...) @printf(i8* %format_ptr, i64 %high_i64, i64 %low_i64, i32 %low_bits_count)
+ ;   %format_ptr = getelementptr [29 x i8], [29 x i8]* @format, i32 0, i32 0
+;    call i32 (i8*, ...) @printf(i8* %format_ptr, i64 %high_i64, i64 %low_i64, i32 %low_bits_count)
 
     ret i32 0
 }
