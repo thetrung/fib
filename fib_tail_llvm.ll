@@ -1,26 +1,3 @@
-define i128 @addi128(i128 %a, i128 %b){
-    %low_a = trunc i128 %a to i64
-    %low_b = trunc i128 %b to i64
-    %low_sum = add i64 %low_a, %low_b
-    %low_carry = icmp ugt i64 %low_sum, %low_a
-    %i64_low_carry = zext i1 %low_carry to i64
-
-    %high_a = lshr i128 %a, 64                      ; Logical Shift Right by 64
-    %high_b = lshr i128 %b, 64
-    %i64_high_a = trunc i128 %high_a to i64
-    %i64_high_b = trunc i128 %high_b to i64
-    %high_sum = add i64  %i64_high_a, %i64_high_b
-    %high_result = add i64 %high_sum, %i64_low_carry
-
-
-    %low_ex = zext i64 %low_sum to i128
-    %high_ex = zext i64 %high_result to i128
-
-    %high_shifted = shl i128 %high_ex, 64    ; Logical Shift Left by 64 
-    %result = or i128 %low_ex, %high_shifted
-    ret i128 %result
-}
-
 define i128 @fib(i128 %n, i128 %a, i128 %b, i128* %count) {
     entry:
         ; Update count
@@ -41,7 +18,7 @@ define i128 @fib(i128 %n, i128 %a, i128 %b, i128* %count) {
         ; Update next/result
         %next_n = sub i128 %n, 1
         %next_a = add i128 0, %b
-        %next_b = call i128 @addi128(i128 %a, i128 %b)
+        %next_b = add i128 %a, %b
 
         ; Tail call with updated count and correct passing
         %tail_call = call i128 @fib(i128 %next_n, i128 %next_a, i128 %next_b, i128* %count)
@@ -63,7 +40,7 @@ define i32 @main(){
     store i128 0, i128* %count
 
     ; Call fib
-    %final_result = call i128 @fib(i128 94, i128 0, i128 1, i128* %count)
+    %final_result = call i128 @fib(i128 100, i128 0, i128 1, i128* %count)
     
     ; Convert lower 64 bits of i128 to i64
     %final_count = load i128, i128* %count
