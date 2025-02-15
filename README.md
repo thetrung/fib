@@ -1,8 +1,16 @@
 # fib
 Various approach on core VM implementation with Fibonacci speed test on top-3 language implementations.
 
-### Top-3 native result 
-include Zig, Rust & LLVM-IR implementation, which I use to learn more about how those languages is so fast. Guess Zig is both simpler to learn & faster to code.
+### Top-4 native result 
+include FASM, Zig, Rust & LLVM-IR implementation, which I use to learn more about how those languages is so fast & how performance was different among them.
+
+#### LLVM version : can correctly compute 128-bit number just like Zig/Rust can without much troubles, but what it can't do yet was printing result in decimal format, since that require manually converting 128-bit data into decimal string before calling printf() - which only support upto 64-bit number. (can compute 128-bit but can't print)
+
+#### FASM version : include a native number-2-ASCII converter but like LLVM version, it can't print result above 64-bit limit yet. so Fib(93) was pretty much the current testing amount for languages. (can print theorically, but can't compute 128-bit yet)
+
+#### Rust/Zig version : are just fine with both computation & printing due to built-in support. 
+
+#### Disabled Printing : I disabled all printing except `FASM version` since it was too fast with even printing so I won't remove it until some random languages can beat it ;)
 
 ![benchmark](https://github.com/thetrung/fib/blob/master/Zig_Rust_LLVM.png)
 
