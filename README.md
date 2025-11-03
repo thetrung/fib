@@ -12,7 +12,7 @@ include FASM, Zig, Rust & LLVM-IR implementation, which I use to learn more abou
 
 #### Disabled Printing : I disabled all printing except `FASM version` since it was too fast with even printing so I won't remove it until some random languages can beat it ;)
 
-![benchmark](https://github.com/thetrung/fib/blob/master/Zig_Rust_LLVM.png)
+![alt](https://github.com/thetrung/fib/blob/master/result_preview.png)
 
 
 
