@@ -33,14 +33,16 @@ define i128 @fib(i128 %n, i128 %a, i128 %b, i128* %count) {
 
 
 declare i32 @printf(i8*, ...)
-@format = private constant [26 x i8] c"fib: %llu %llu, Count: %d\0a"
+;@format = private constant [26 x i8] c"fib: %llu %llu, Count: %d\0a"
 
 define i32 @main(){
     %count = alloca i128
     store i128 0, i128* %count
 
     ; Call fib
-    %final_result = call i128 @fib(i128 100, i128 0, i128 1, i128* %count)
+    ; fib(93) = 12200160415121876738
+    ; fib(100) = 354224848179261915075
+    %final_result = call i128 @fib(i128 93, i128 0, i128 1, i128* %count)
     
     ; Convert lower 64 bits of i128 to i64
     ;%final_count = load i128, i128* %count

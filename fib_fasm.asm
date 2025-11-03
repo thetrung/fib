@@ -25,7 +25,7 @@ main:
     
     ; print :
     push rdi    ; copy N -> rcx
-    printf msg_n_eq, msg_n_eq_len ; N = 
+    printf msg_n_eq, 4 ; N = 
 
     pop rax    ; print N :
     call print_num
@@ -66,7 +66,7 @@ exit:
     ; save stack ;)
     push rax
     ; Exit with Result :
-    printf msg_exit, msg_exit_len
+    printf msg_exit, 4
     ; Restore!
     pop rax
     call print_num
@@ -134,9 +134,5 @@ newline:
 segment readable writable
 buffer rb 20
 newline_str db 10
-
 msg_n_eq: db "N = ", 0
-msg_n_eq_len: db $ - msg_n_eq
-
 msg_exit: db "F = ", 0
-msg_exit_len: db $ - msg_exit
