@@ -40,9 +40,7 @@ define i32 @main(){
     store i128 0, i128* %count
 
     ; Call fib
-    ; fib(93) = 12200160415121876738
-    ; fib(100) = 354224848179261915075
-    %final_result = call i128 @fib(i128 93, i128 0, i128 1, i128* %count)
+    %final_result = call i128 @fib(i128 90, i128 0, i128 1, i128* %count)
     
     ; Convert lower 64 bits of i128 to i64
     ;%final_count = load i128, i128* %count

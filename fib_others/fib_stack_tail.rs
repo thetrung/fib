@@ -219,7 +219,7 @@ fn main() {
         Rec,                // 
         // Return              // 
     ];
-    let mut new_stack:Vec<i128> = vec![1, 0, 100]; // b a n f => f( n a b)
+    let mut new_stack:Vec<i128> = vec![1, 0, 90]; // b a n f => f( n a b)
 
     // let result = 
     eval(&bytecode, &mut new_stack);

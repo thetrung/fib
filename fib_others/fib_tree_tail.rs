@@ -117,7 +117,7 @@ fn main() {
     let fmap: HashMap<i128, Expression> = HashMap::from_iter(vec![(0x1, f)]);
     let vmap: HashMap<i128, i128> = HashMap::new(); // empty
     let expr = Call(0x1, vec![
-        Box::new(Number(100)),
+        Box::new(Number(90)),
         Box::new(Number(0)),
         Box::new(Number(1)),
     ]);

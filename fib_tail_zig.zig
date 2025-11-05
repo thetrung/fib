@@ -15,8 +15,8 @@ const print = std.debug.print;
 
 pub fn main() !void {
     var loop_count: i128 = 0;
-    _ = fib(93, 0, 1, &loop_count);
+    _ = fib(90, 0, 1, &loop_count);
     // => 12200160415121876738
-    // const r = fib(93, 0, 1, &loop_count);
+    // const r = fib(90, 0, 1, &loop_count);
     // print("\nacc = {} / loop: {}\n", .{ r, loop_count });
 }

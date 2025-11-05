@@ -13,7 +13,7 @@ macro printf msg, msg_length
 }
 entry main
 main:
-    mov rdi, 93     ; N = 93 => 12200160415121876738
+    mov rdi, 90     ; N = 93 => 12200160415121876738 | 90 => 2880067194370816120
     mov rsi, 0      ; A = 0
     mov rdx, 1      ; B = 1
     mov eax, 0      ; loop_count = 0
