@@ -48,8 +48,8 @@ let run vm =
   if vm.debug then Printf.printf "\nBEGIN (%d instructions)\n" len;
   let rec loop () =
     if vm.ip >= len then () else
-    if vm.debug then Printf.printf "OPCODE: %d\n" vm.ip;
-    if vm.debug then Printf.printf "[ %d | %d | %d | %d ]\n" 
+    if vm.debug then 
+      Printf.printf "OPCODE: %d\n[ %d | %d | %d | %d ]\n" vm.ip
       vm.registers.(ax) vm.registers.(bx) vm.registers.(cx) vm.registers.(dx);
     match vm.program.(vm.ip) with
     | HALT -> ()
@@ -139,19 +139,8 @@ let run vm =
   loop ();
   if vm.debug then Printf.printf "\n== END PROGRAM == \n"
 
-let () =
-  (*let test_ADD_MUL = [|
-    LDI (ax, 10);     (* $0x0 = 10 *)
-    LDI (bx, 20);     (* $0x1 = 20 *)
-    ADD (ax, bx, cx); (* exx0 + $0x1 = $0x2  *)
-    LDI (dx, 2);      (* $0x3 = 2 *)
-    MUL   (cx, dx, ex); (* $0x2 x $0x3 = $0x4 *)
-    PRINT  ex;          (* PRINT $0x4 *)
-    HALT;               (* Stop *)
-  |] in let vm = create_vm test_ADD_MUL in run vm;
-   *)
-
-  let test_branching = [|
+let () = 
+  let fib = [|
     LOAD_IMM (ax, 0);          (* a = 0 *)
     LOAD_IMM (bx, 1);          (* b = 1 *)
     LOAD_IMM (cx, 90);          (* c = 10 *)
@@ -169,4 +158,4 @@ let () =
     LABEL ("Exit");
     PRINT (bx);                (* print a *)
     HALT;                      (* end program *)
-  |] in let vm = create_vm test_branching in run vm;
+  |] in let vm = create_vm fib in run vm;

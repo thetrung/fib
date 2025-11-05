@@ -9,6 +9,6 @@ fib :: proc (n: i128, a : i128, b: i128) -> i128 {
     } 
 }
 main :: proc (){
-    result := fib(93, 0, 1)
+    result := fib(90, 0, 1)
     fmt.println (result)
 }
