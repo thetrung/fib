@@ -149,7 +149,6 @@ let () =
     JMP_EQUAL (13);            (* return a *)
     CMP_REG_IMM (cx, 1);       (* c == 1 ? *)
     JMP_EQUAL (13);            (* return b *)
-                               (* else *)
     MOV_REG_REG (dx, ax);      (* d = a *)
     MOV_REG_REG (ax, bx);      (* a = b *)
     ADD (dx, bx, bx);          (* b = d + b *)
