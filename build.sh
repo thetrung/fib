@@ -26,6 +26,7 @@ llc -filetype=obj fib_tail_llvm.mlir -o ./build/fib_tail_llvm.o && clang ./build
 zig build-exe fib_tail_zig.zig && mv fib_tail_zig ./build/fib_tail_zig #&& rm fib_tail_zig.o
 cd ./fib_tail_odin && odin build . && mv fib_tail_odin ../build/fib_tail_odin && cd ..
 ocamlopt -O3 -unsafe -o fib_tail_ocaml fib_tail_ocaml.ml && mv fib_tail_ocaml ./build/fib_tail_ocaml && rm -f *.cmx *.cmi *.o *.out
+ocamlopt -O3 -unsafe -o fib_tail_ml fib_tail_ml.ml && mv fib_tail_ml ./build/fib_tail_ml && rm -f *.cmx *.cmi *.o *.out
 luajit -bg fib_tail_lua.lua fib_tail_lua.jit && mv fib_tail_lua.jit ./build/fib_tail_lua.jit 
 cp fib_tail_lua.lua ./build
 case "$OS" in Linux)
@@ -36,9 +37,9 @@ esac
 if [ hyperfine ]; then
     case "$OS" in 
     Linux)
-      cd ./build && hyperfine --prepare 'echo test;sync;echo 3 | sudo tee /proc/sys/vm/drop_caches'  --warmup 10 -N './fib_tail_rust' './fib_tail_llvm' './fib_tail_zig' './fib_tail_odin' './fib_tail_ocaml' './fib_tail_fasm' 'luajit fib_tail_lua.jit' 'lua fib_tail_lua.lua';;
+      cd ./build && hyperfine --prepare 'echo test;sync;echo 3 | sudo tee /proc/sys/vm/drop_caches'  --warmup 10 -N './fib_tail_rust' './fib_tail_llvm' './fib_tail_zig' './fib_tail_odin' './fib_tail_ocaml' './fib_tail_ml' './fib_tail_fasm' 'luajit fib_tail_lua.jit' 'lua fib_tail_lua.lua';;
     Darwin)
-      cd ./build && hyperfine --warmup 10 -N './fib_tail_rust' './fib_tail_llvm' './fib_tail_zig' './fib_tail_odin' './fib_tail_ocaml' 'luajit fib_tail_lua.jit' 'lua fib_tail_lua.lua';;
+      cd ./build && hyperfine --warmup 10 -N './fib_tail_rust' './fib_tail_llvm' './fib_tail_zig' './fib_tail_odin' './fib_tail_ocaml' './fib_tail_ml' 'luajit fib_tail_lua.jit' 'lua fib_tail_lua.lua';;
     esac
     echo ''
 
