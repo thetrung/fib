@@ -1,8 +1,11 @@
-if [ "$(uname -s)" = "Linux" ]; then
-  echo "Running on Linux"
-elif ["$(uname -s)" = "Darwin" ]; then
-  echo "Running on MacOS"
-fi
+#!bin/sh
+OS=$(uname -s)
+case "$OS" in
+  Linux)
+    echo "Running on Linux";;
+  Darwin)
+    echo "Running on MacOS";;
+esac
 
 [ -d "/path/to/dir" ] && rm ./build/* && rm -rf ./build
 mkdir ./build
@@ -25,17 +28,18 @@ cd ./fib_tail_odin && odin build . && mv fib_tail_odin ../build/fib_tail_odin &&
 ocamlopt -o fib_tail_ocaml fib_tail_ocaml.ml && mv fib_tail_ocaml ./build/fib_tail_ocaml && rm -f *.cmx *.cmi *.o *.out
 luajit -bg fib_tail_lua.lua fib_tail_lua.jit && mv fib_tail_lua.jit ./build/fib_tail_lua.jit 
 cp fib_tail_lua.lua ./build
-if [ "$(uname -s)" = "Linux" ]; then
-    fasm fib_tail_fasm.asm && mv fib_tail_fasm ./build/fib_tail_fasm && chmod +x ./build/fib_tail_fasm
-fi 
+case "$OS" in Linux)
+    fasm fib_tail_fasm.asm && mv fib_tail_fasm ./build/fib_tail_fasm && chmod +x ./build/fib_tail_fasm;;
+esac
 
 # Benchmark with hyperfine :
 if [ hyperfine ]; then
-    if [ "$(uname -s)" = "Linux" ]; then
-      cd ./build && hyperfine --prepare 'echo test;sync;echo 3 | sudo tee /proc/sys/vm/drop_caches'  --warmup 10 -N './fib_tail_rust' './fib_tail_llvm' './fib_tail_zig' './fib_tail_odin' './fib_tail_ocaml' './fib_tail_fasm' 'luajit fib_tail_lua.jit' 'lua fib_tail_lua.lua'
-    elif [ "$(uname -s)" = "Darwin" ]; then
-      cd ./build && hyperfine --warmup 10 -N './fib_tail_rust' './fib_tail_llvm' './fib_tail_zig' './fib_tail_odin' './fib_tail_ocaml' 'luajit fib_tail_lua.jit'
-    fi
+    case "$OS" in 
+    Linux)
+      cd ./build && hyperfine --prepare 'echo test;sync;echo 3 | sudo tee /proc/sys/vm/drop_caches'  --warmup 10 -N './fib_tail_rust' './fib_tail_llvm' './fib_tail_zig' './fib_tail_odin' './fib_tail_ocaml' './fib_tail_fasm' 'luajit fib_tail_lua.jit' 'lua fib_tail_lua.lua';;
+    Darwin)
+      cd ./build && hyperfine --warmup 10 -N './fib_tail_rust' './fib_tail_llvm' './fib_tail_zig' './fib_tail_odin' './fib_tail_ocaml' 'luajit fib_tail_lua.jit' 'lua fib_tail_lua.lua';;
+    esac
     echo ''
 
     # Delete ?
