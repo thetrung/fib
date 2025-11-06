@@ -3,10 +3,10 @@ type opcode =
   | MOV_REG_REG of int * int     (* dst, src *)
   | LOAD_IMM of int * int        (* dst, imm *)
 
-  | ADD of int * int * int       (* src1, src2, dst *)
-  | SUB of int * int * int
-  | MUL of int * int * int
-  | DIV of int * int * int
+  | ADD of int * int       (* dst, src *)
+  | SUB of int * int 
+  | MUL of int * int 
+  | DIV of int * int
   | INC of int 
   | DEC of int
 
@@ -58,18 +58,18 @@ let run vm =
     | LOAD_IMM (dst, imm) ->
         vm.registers.(dst) <- imm;
         vm.ip <- vm.ip + 1;
-    | ADD (src1, src2, dst) ->
-        vm.registers.(dst) <- vm.registers.(src1) + vm.registers.(src2);
+    | ADD (dst, src) ->
+        vm.registers.(dst) <- vm.registers.(dst) + vm.registers.(src);
         vm.ip <- vm.ip + 1;
-    | SUB (src1, src2, dst) ->
-        vm.registers.(dst) <- vm.registers.(src1) - vm.registers.(src2);
+    | SUB (dst, src) ->
+        vm.registers.(dst) <- vm.registers.(dst) - vm.registers.(src);
         vm.ip <- vm.ip + 1;
-    | MUL (src1, src2, dst) ->
-        vm.registers.(dst) <- vm.registers.(src1) * vm.registers.(src2);
+    | MUL (dst, src) ->
+        vm.registers.(dst) <- vm.registers.(dst) * vm.registers.(src);
         vm.ip <- vm.ip + 1;
-    | DIV (src1, src2, dst) ->
-        if vm.registers.(src2) = 0 then failwith "Division by zero"
-        else vm.registers.(dst) <- vm.registers.(src1) / vm.registers.(src2);
+    | DIV (dst, src) ->
+        if vm.registers.(src) = 0 then failwith "Division by zero"
+        else vm.registers.(dst) <- vm.registers.(dst) / vm.registers.(src);
         vm.ip <- vm.ip + 1;
     | INC src -> 
         vm.registers.(src) <- vm.registers.(src) + 1;
@@ -126,7 +126,7 @@ let () =
   let fib = [|
     LOAD_IMM (ax, 0);          (* a = 0 *)
     LOAD_IMM (bx, 1);          (* b = 1 *)
-    LOAD_IMM (cx, 90);          (* c = 10 *)
+    LOAD_IMM (cx, 90);         (* c = 90 => 2880067194370816120 *)
     LABEL("Entry");
     CMP_REG_IMM (cx, 0);       (* c == 0 ? *)
     JMP_EQUAL (13);            (* return a *)
@@ -134,7 +134,7 @@ let () =
     JMP_EQUAL (13);            (* return b *)
     MOV_REG_REG (dx, ax);      (* d = a *)
     MOV_REG_REG (ax, bx);      (* a = b *)
-    ADD (dx, bx, bx);          (* b = d + b *)
+    ADD (bx, dx);              (* b = d + b *)
     DEC (cx);                  (* c = c - 1 *)
     JMP (3);                   (* -> Entry 3 *)
     LABEL ("Exit");
