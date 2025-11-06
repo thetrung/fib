@@ -2,9 +2,9 @@
 OS=$(uname -s)
 case "$OS" in
   Linux)
-    echo "Running on Linux";;
+    echo "Benchmark on Linux :";;
   Darwin)
-    echo "Running on MacOS";;
+    echo "Benchmark on MacOS :";;
 esac
 
 [ -d "/path/to/dir" ] && rm ./build/* && rm -rf ./build

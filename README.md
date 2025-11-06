@@ -20,15 +20,15 @@ This is my test result for `Fib(90)` on `Ubuntu 26.04` with `intel i5-1135G7 @ 4
 
 - With fib(90, 0, 1) on MacOS with `hyperfine --warmup 10` : 
 
-  Summary
-  ./fib_tail_llvm ran
-    1.18 ± 0.08 times faster than ./fib_tail_odin
-    1.20 ± 0.09 times faster than ./fib_tail_rust
-    1.21 ± 0.18 times faster than ./fib_tail_zig
-    1.38 ± 0.18 times faster than luajit fib_tail_lua.jit
-    1.43 ± 0.10 times faster than lua fib_tail_lua.lua
-    1.48 ± 0.10 times faster than ./fib_tail_ml
-    1.57 ± 0.11 times faster than ./fib_tail_ocaml
+      Summary
+      ./fib_tail_llvm ran
+        1.18 ± 0.10 times faster than ./fib_tail_odin
+        1.19 ± 0.16 times faster than ./fib_tail_zig
+        1.20 ± 0.10 times faster than ./fib_tail_rust
+        1.35 ± 0.11 times faster than luajit fib_tail_lua.jit
+        1.43 ± 0.12 times faster than lua fib_tail_lua.lua
+        1.48 ± 0.19 times faster than ./fib_tail_ml
+        1.56 ± 0.13 times faster than ./fib_tail_ocaml
 
 
 
