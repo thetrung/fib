@@ -33,4 +33,26 @@ This is my test result for `Fib(90)` on `Ubuntu 26.04` with `intel i5-1135G7 @ 4
 
 
 ### Conclusion 
-When there's no (or less) difference in algorithm/compiler optimization, the direct call from a series of instructions could be just as fast as native code or JITed, bytecode execution.
+- As Simple as possible => Best Performance.
+- Everything need to be clarity before it can be fast. 
+- Program/Bytecode as an `Int Array` is final goal for JIT VM.
+
+### TODO 
+For current VM on Ocaml it may just simply fulfill these things :
+
+##### Encoding into `Int Array`
+How final bytecode form actually is. 
+
+##### Constant Pool as `Static Data Memory` 
+indeed is like how PIC ref value to static data on Flash -> which we can simply access program data memory by VM pointer within region 🤷‍♂️ => So no need additional stuffs, just reorganize current core vm structure. 
+
+##### Memory Allocation via `Dynamic Array` 
+could be just 3 mutable Arrays : Int - Float - Char : Which is resizable, renewable, malloc on-demand in runtime, rely on ocaml GC. 
+
+##### I/O & Interfaces
+How it input/output & interact with outside libraries via Ocaml `Register.Call`. 
+
+### Further Plan
+For fastest thing we may want to compete with other poorly design languages nowadays (except Ocaml/Lua), I may just cheat it by compiling down directly to Assembly & call it a day. But in another hand, having a hot-reload VM within other game engines (while being more performant) is very much desirable. Especially when it is designed to handle `data-driven model` to let people that once love 8-bit era can do it again with much more simple & elegant way to create their things with joy and less hassle. Perhaps, with more modern stuffs like 2D/3D support.
+
+Else, it still could serve as a foundation to build other languages on it : like non-GC but Region-based Auto-Free Memory - so people can ditch Rust for better mem model.
